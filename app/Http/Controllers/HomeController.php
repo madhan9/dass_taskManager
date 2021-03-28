@@ -196,7 +196,7 @@ class HomeController extends Controller
         $res = $request->all();
         
         $input =[];
-        $input['unique_id'] =  time().mt_rand(0,9);
+        $input['unique_no'] =  time().mt_rand(0,9);
         $input["job_number"] = $res["pro_number"];
         $input["cur_status_1"] = $res["cur_status_1"];
         $input["final_cost_1"] = $res["final_cost_1"];
@@ -224,13 +224,14 @@ class HomeController extends Controller
         $input["date_of_invoice_5"] = $res["date_of_invoice_5"];
         $input["date_of_payment_receipt_5"] = $res["date_of_payment_receipt_5"];
        
-        $payment->where('job_number', $res["pro_number"])->first();
-
+        $payment= Payment::where('job_number', $res["pro_number"])->first();
+    
         if(empty($payment))
-        {
+        {   $payment= new Payment();
             $payment->fill($input)->save();
         }
         else{
+            $payment= Payment::find($payment->id);
             $payment->update($input);
         }
 
